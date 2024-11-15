@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -39,17 +42,33 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+   /* composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.12"
+    }*/
+    composeCompiler {
+        enableStrongSkippingMode = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
         }
     }
+
 }
 
+
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.ser)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.android)
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha01")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                 composable("chat") {}
                 composable("camera") {}
                 composable("translate") { TranslationScreen() }
-                composable("history") {}
+                composable("history") {  }
                 composable("favorite") {}
             }
         }

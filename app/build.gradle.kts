@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -41,6 +42,8 @@ android {
     }
     buildFeatures {
         compose = true
+        //
+        buildConfig = true
     }
    /* composeOptions {
         kotlinCompilerExtensionVersion = "1.5.12"
@@ -60,6 +63,11 @@ android {
 
 
 dependencies {
+    implementation(libs.okhttp.logging)
+    implementation(libs.room.runtime)
+    implementation(libs.androidx.room)
+    ksp(libs.room.compiler)
+
     implementation(libs.retrofit)
     implementation(libs.retrofit.ser)
     implementation(libs.kotlinx.serialization.json)

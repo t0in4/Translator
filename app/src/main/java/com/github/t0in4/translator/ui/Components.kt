@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import org.checkerframework.checker.units.qual.t
 
 @Composable
-fun TextInput(language: String, text: String, onTextChange: (String) -> Unit, onClearText: () -> Unit) {
+fun TextInput(language: String, text: String, onTextChange: (String) -> Unit, onClearText: () -> Unit, modifier: Modifier = Modifier) {
     Column {
         Text(text = language)
         OutlinedTextField(value = text, onValueChange = onTextChange, modifier = Modifier.fillMaxWidth(),
@@ -47,15 +47,17 @@ fun TranslateButton(onTranslate: () -> Unit) {
 }
 
 
-/*
 @Composable
-fun TranslationResult(result: String) {
+fun TranslationResult(result: String, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = result,
-        onValueChange = { },
+        onValueChange = {},
         readOnly = true,
-        mddifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     )
+}
 
-
-}*/
+@Composable
+fun LanguageSelector(sourceLanguage: String, targetLanguage: String, onSwapLanguages: () -> Unit) {
+    // TODO: Добавьте сюда реализацию селектора языков
+}

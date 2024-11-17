@@ -15,8 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.t0in4.translator.ui.TextInput
 import com.github.t0in4.translator.ui.TranslateButton
+import com.github.t0in4.translator.ui.TranslationResult
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun TranslationScreen(
     viewModel: TranslationViewModel = hiltViewModel()
@@ -26,19 +30,21 @@ fun TranslationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         TopAppBar(title = { Text("Translation App")})
         TextInput(
             language = uiState.value.sourceLang,
             text = uiState.value.inputText,
             onTextChange = { viewModel.updateInputText(it) },
-            onClearText = { viewModel.clearInputText() }
+            onClearText = { viewModel.clearInputText() },
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         TranslateButton(onTranslate = { viewModel.translateText() })
-        uiState.value.translatedText?.let {
-            //TranslationResult(it)
+        Spacer(modifier = Modifier.height(16.dp))
+        uiState.value.translateText?.let {
+            TranslationResult(result = it,
+                modifier = Modifier.padding(horizontal = 16.dp))
         }
     }
 

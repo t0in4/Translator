@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.t0in4.translator.core.data.TranslationHistory
 import com.github.t0in4.translator.screen.translation.TranslationViewModel
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +49,7 @@ fun HistoryItem(history: TranslationHistory) {
     ){
         Text(text = "Source: ${history.sourceText}")
         Text(text = "Translation: ${history.translatedText}")
-        Text(text = "Time: ${history.timestamp}")
+        Text(text = "Time: ${SimpleDateFormat().format(history.timestamp)}")
     }
 
 }

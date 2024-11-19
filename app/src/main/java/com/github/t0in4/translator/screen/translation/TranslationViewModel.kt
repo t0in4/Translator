@@ -1,5 +1,6 @@
 package com.github.t0in4.translator.screen.translation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.t0in4.translator.core.domain.LanguageCode
@@ -18,7 +19,7 @@ class TranslationViewModel @Inject constructor(
     private val translationUseCase: TranslationUseCase,
     private val saveHistoryUseCase: SaveHistoryUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(TranslationUiState())
+    private val _uiState = MutableStateFlow(TranslationUiState("", "", ""))
     val uiState: StateFlow<TranslationUiState> = _uiState
 
     fun updateInputText(text: String) {
@@ -34,15 +35,18 @@ class TranslationViewModel @Inject constructor(
             it.copy(
                 sourceLang = it.targetLang,
                 targetLang = it.sourceLang
+
             )
+
         }
     }
 
     fun translateText() {
         viewModelScope.launch {
             val result = translationUseCase.translate(
-                sl = LanguageCode.ENGLISH,
-                dl = LanguageCode.RUSSIAN,
+                sl =  LanguageCode.valueOf(_uiState.value.sourceLang.uppercase()),
+                dl = LanguageCode.valueOf(_uiState.value.targetLang.uppercase()),
+                //dl = LanguageCode.valueOf(code.uppercase()),
                 text = _uiState.value.inputText,
             )
             _uiState.update {
@@ -59,8 +63,8 @@ class TranslationViewModel @Inject constructor(
 }
 
 data class TranslationUiState(
-    val sourceLang: String = "English",
-    val targetLang: String = "Russian",
-    val inputText: String = "",
-    val translateText: String? = null,
+    var sourceLang: String ,
+    var targetLang: String ,
+    var inputText: String ,
+    var translateText: String? = null,
 )

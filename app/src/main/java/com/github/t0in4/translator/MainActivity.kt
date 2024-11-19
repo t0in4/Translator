@@ -211,7 +211,6 @@ fun CustomNavigationBarItem(
                                 intValue = index
                                 navController.navigate(item)
                             }
-
                         )
                     }
                 }
@@ -270,7 +269,6 @@ fun CustomNavigationBarItem(
     navController: NavController
 ) {
     val painter = rememberVectorPainter(image = icon)
-    //val navController = rememberNavController()
     Canvas(
         modifier = Modifier
             .width(69.dp)
@@ -286,6 +284,5 @@ fun CustomNavigationBarItem(
                 )
             }
         }
-
     }
 }

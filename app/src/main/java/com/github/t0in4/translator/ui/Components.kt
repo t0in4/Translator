@@ -11,17 +11,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import org.checkerframework.checker.units.qual.t
 
 @Composable
 fun TextInput(language: String, text: String, onTextChange: (String) -> Unit, onClearText: () -> Unit, modifier: Modifier = Modifier) {
-    Column {
+    Column(modifier = modifier) {
         Text(text = language)
         OutlinedTextField(value = text, onValueChange = onTextChange, modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Enter text here...") }, trailingIcon = {
@@ -33,13 +30,13 @@ fun TextInput(language: String, text: String, onTextChange: (String) -> Unit, on
 }
 
 @Composable
-fun TranslateButton(onTranslate: () -> Unit) {
+fun TranslateButton(onTranslate: () -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Button(
             onClick = onTranslate,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .padding(top = 8.dp)
+                .padding(9.dp)
         ){
             Text("Translate")
         }

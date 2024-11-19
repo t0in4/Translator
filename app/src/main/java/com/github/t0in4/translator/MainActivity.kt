@@ -1,20 +1,14 @@
 package com.github.t0in4.translator
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -24,29 +18,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.github.t0in4.translator.screen.TranslationScreen
+import com.github.t0in4.translator.navigation.NavRoutes
+import com.github.t0in4.translator.screen.history.HistoryScreen
+import com.github.t0in4.translator.screen.translation.TranslationScreen
 import com.github.t0in4.translator.ui.theme.TranslatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,8 +71,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable("chat") {}
                 composable("camera") {}
-                composable("translate") { TranslationScreen() }
-                composable("history") {  }
+                composable(NavRoutes.TranslationScreen.route) { TranslationScreen(navController) }
+                composable(NavRoutes.HistoryScreen.route) { HistoryScreen(navController) }
                 composable("favorite") {}
             }
         }
@@ -198,22 +185,37 @@ fun CustomNavigationBarItem(
         NavigationBar(
             content = {
                 Destinations.forEachIndexed { index, item ->
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                imageVector = icons[index],
-                                contentDescription = item
-                            )
-                        },
-                        label = { Text(item) },
-                        selected = intValue == index,
-                        onClick = {
-                            intValue = index
-                            navController.navigate(item)
-                        }
+                    if (item.equals("translate")) {
+                        CustomNavigationBarItem(
+                            icons[index],
+                            label = item,
+                            selected = intValue == index,
+                            /*onClick = {
+                                intValue = index
+                                navController.navigate(item)
+                            }*/
+                            intValue = index,
+                            navController = navController
+                        )
+                    } else {
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(
+                                    imageVector = icons[index],
+                                    contentDescription = item
+                                )
+                            },
+                            label = { Text(item) },
+                            selected = intValue == index,
+                            onClick = {
+                                intValue = index
+                                navController.navigate(item)
+                            }
 
-                    )
+                        )
+                    }
                 }
+
             }
         )
     }
@@ -257,4 +259,33 @@ fun CustomNavigationBarItem(
         @Composable
         fun navigationIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
     }
+@Composable
+fun CustomNavigationBarItem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    //onClick: () -> Unit
+    intValue: Int,
+    navController: NavController
+) {
+    val painter = rememberVectorPainter(image = icon)
+    //val navController = rememberNavController()
+    Canvas(
+        modifier = Modifier
+            .width(69.dp)
+            .height(69.dp)
+            .clipToBounds()
+            .clickable(onClick = { navController.navigate(label) })
+    ){
+        drawCircle(color = Color.Blue, radius = 69f)
+        translate(left = 60f, top = 60f) {
+            with(painter) {
+                draw(
+                    size = intrinsicSize,
+                )
+            }
+        }
 
+    }
+}

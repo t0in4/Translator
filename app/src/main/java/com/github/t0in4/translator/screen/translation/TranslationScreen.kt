@@ -1,4 +1,4 @@
-package com.github.t0in4.translator.screen
+package com.github.t0in4.translator.screen.translation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.github.t0in4.translator.ui.TextInput
 import com.github.t0in4.translator.ui.TranslateButton
 import com.github.t0in4.translator.ui.TranslationResult
@@ -23,6 +24,7 @@ import com.github.t0in4.translator.ui.TranslationResult
 
 @Composable
 fun TranslationScreen(
+    navController: NavController,
     viewModel: TranslationViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState()
@@ -32,6 +34,7 @@ fun TranslationScreen(
             .fillMaxSize()
     ) {
         TopAppBar(title = { Text("Translation App")})
+
         TextInput(
             language = uiState.value.sourceLang,
             text = uiState.value.inputText,
@@ -39,9 +42,16 @@ fun TranslationScreen(
             onClearText = { viewModel.clearInputText() },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
-        TranslateButton(onTranslate = { viewModel.translateText() })
+
+        TranslateButton(
+            onTranslate = { viewModel.translateText() },
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         uiState.value.translateText?.let {
             TranslationResult(result = it,
                 modifier = Modifier.padding(horizontal = 16.dp))

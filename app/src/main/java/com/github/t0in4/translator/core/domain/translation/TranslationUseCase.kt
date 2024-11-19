@@ -1,7 +1,7 @@
-package com.github.t0in4.translator.core.domain
+package com.github.t0in4.translator.core.domain.translation
 
-import android.view.translation.TranslationResponse
 import com.github.t0in4.translator.core.TranslationApi
+import com.github.t0in4.translator.core.domain.LanguageCode
 import javax.inject.Inject
 
 //import jakarta.inject.Inject

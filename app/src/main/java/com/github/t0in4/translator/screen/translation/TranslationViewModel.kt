@@ -1,9 +1,10 @@
-package com.github.t0in4.translator.screen
+package com.github.t0in4.translator.screen.translation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.t0in4.translator.core.domain.LanguageCode
-import com.github.t0in4.translator.core.domain.TranslationUseCase
+import com.github.t0in4.translator.core.domain.history.SaveHistoryUseCase
+import com.github.t0in4.translator.core.domain.translation.TranslationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TranslationViewModel @Inject constructor(
     //api
-    private val translationUseCase: TranslationUseCase
+    private val translationUseCase: TranslationUseCase,
+    private val saveHistoryUseCase: SaveHistoryUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TranslationUiState())
     val uiState: StateFlow<TranslationUiState> = _uiState
@@ -43,7 +45,14 @@ class TranslationViewModel @Inject constructor(
                 dl = LanguageCode.RUSSIAN,
                 text = _uiState.value.inputText,
             )
-            _uiState.update{ it.copy(translateText = result.translations.possibleTranslations.firstOrNull() ?: _uiState.value.inputText) }
+            _uiState.update {
+                it.copy(
+                    translateText = result.translations.possibleTranslations.firstOrNull()
+                        ?: _uiState.value.inputText
+                )
+            }
+            saveHistoryUseCase.save(_uiState.value.inputText, _uiState.value.translateText.orEmpty())
+                                                                              // orEmpty - запишет вместо null пустую строку
         }
     }
 

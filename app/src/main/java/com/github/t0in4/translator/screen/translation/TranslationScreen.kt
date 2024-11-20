@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.t0in4.translator.R
+import com.github.t0in4.translator.screen.favorites.FavoriteViewModel
 import com.github.t0in4.translator.ui.TextInput
 import com.github.t0in4.translator.ui.TranslateButton
 import com.github.t0in4.translator.ui.TranslationResult
@@ -45,7 +46,8 @@ import com.github.t0in4.translator.ui.TranslationResult
 @Composable
 fun TranslationScreen(
     navController: NavController,
-    viewModel: TranslationViewModel = hiltViewModel()
+    viewModel: TranslationViewModel = hiltViewModel(),
+    viewModelF: FavoriteViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState()
     var itemPositionLeft = remember {
@@ -173,7 +175,8 @@ fun TranslationScreen(
         uiState.value.translateText?.let {
             TranslationResult(
                 result = it,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                onSave  = { viewModel.insertFavorite() }
             )
         }
     }

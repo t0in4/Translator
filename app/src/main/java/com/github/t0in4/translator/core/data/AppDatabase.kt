@@ -5,12 +5,15 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instanc
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.github.t0in4.translator.core.favoritedata.FavoriteDao
+import com.github.t0in4.translator.core.favoritedata.FavoriteTable
 
-@Database(entities = [TranslationHistory::class ], version = 1)
+@Database(entities = [TranslationHistory::class, FavoriteTable::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
 
     abstract fun translationHistoryDao(): TranslationHistoryDao
+    abstract fun favoriteDao(): FavoriteDao
     companion object {
         @Volatile // потокобезопасный обрашение к этой переменной
         // будет безопасной для различных потоков
@@ -25,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database",
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

@@ -32,6 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.t0in4.translator.navigation.NavRoutes
+import com.github.t0in4.translator.screen.favorites.FavoriteScreen
 import com.github.t0in4.translator.screen.history.HistoryScreen
 import com.github.t0in4.translator.screen.translation.TranslationScreen
 import com.github.t0in4.translator.ui.theme.TranslatorTheme
@@ -73,7 +74,7 @@ class MainActivity : ComponentActivity() {
                 composable("camera") {}
                 composable(NavRoutes.TranslationScreen.route) { TranslationScreen(navController) }
                 composable(NavRoutes.HistoryScreen.route) { HistoryScreen(navController) }
-                composable("favorite") {}
+                composable(NavRoutes.FavoriteScreen.route) { FavoriteScreen(navController) }
             }
         }
     }

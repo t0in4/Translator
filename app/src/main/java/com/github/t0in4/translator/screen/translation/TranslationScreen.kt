@@ -4,9 +4,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -22,20 +23,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.Role.Companion.Switch
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.t0in4.translator.R
 import com.github.t0in4.translator.screen.favorites.FavoriteViewModel
+import com.github.t0in4.translator.ui.LanguageSelector
 import com.github.t0in4.translator.ui.TextInput
 import com.github.t0in4.translator.ui.TranslateButton
 import com.github.t0in4.translator.ui.TranslationResult
@@ -75,9 +76,14 @@ fun TranslationScreen(
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .clip(RoundedCornerShape(14.dp)),
+                .clip(RoundedCornerShape(14.dp))
+                .fillMaxWidth()
+                ,
         ) {
-            Box() {
+            Box(
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier.weight(1f)
+            ) {
                 Row(
                     modifier = Modifier.clickable {
                         expandedLeft = true
@@ -86,6 +92,8 @@ fun TranslationScreen(
                      leftState = Languages[itemPositionLeft.value]
                     Text(if (checker) rightState else leftState)
                     uiState.value.sourceLang = leftState
+                    /*Text(Languages[itemPositionLeft.value])
+                    uiState.value.sourceLang = Languages[itemPositionLeft.value]*/
                 }
                 DropdownMenu(
                     expanded = expandedLeft,
@@ -104,7 +112,9 @@ fun TranslationScreen(
             }
 
             Spacer(Modifier.padding(16.dp))
-            Box() {
+            Box(
+                //modifier = Modifier.weight(2f)
+            ) {
                 val painter =
                     rememberVectorPainter(ImageVector.vectorResource(R.drawable.resource_switch))
                 Canvas(
@@ -115,19 +125,30 @@ fun TranslationScreen(
                         .clickable(onClick =  {
                             onCheckerChange()
                             onClick()
+
                         })
                 ) {
+
                     with(painter) {
                         draw(
                             size = intrinsicSize
                         )
                     }
                 }
+
+              /*  LanguageSelector(
+                    sourceLanguage = uiState.value.sourceLang,
+                    targetLanguage  = uiState.value.targetLang,
+                    onSwapLanguages = { viewModel.swapLanguage()}
+                )*/
             }
 
             Spacer(Modifier.padding(16.dp))
 
-            Box() {
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier.weight(1f)
+            ) {
                 Row(
                     modifier = Modifier.clickable {
                         expandedRight = true
@@ -135,7 +156,10 @@ fun TranslationScreen(
                 ) {
                      rightState = Languages[itemPositionRight.value]
                     Text(text = if (checker) leftState else rightState)
+
                     uiState.value.targetLang = rightState
+                    /*Text(text = Languages[itemPositionRight.value])
+                    uiState.value.targetLang = Languages[itemPositionRight.value]*/
                 }
                 DropdownMenu(
                     expanded = expandedRight,

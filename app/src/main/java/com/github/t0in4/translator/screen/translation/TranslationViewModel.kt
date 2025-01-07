@@ -23,7 +23,7 @@ class TranslationViewModel @Inject constructor(
     private val saveHistoryUseCase: SaveHistoryUseCase,
     private val saveFavoriteUseCase: SaveFavoriteUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(TranslationUiState("", "", ""))
+    private val _uiState = MutableStateFlow(TranslationUiState())
     val uiState: StateFlow<TranslationUiState> = _uiState
 
     fun updateInputText(text: String) {
@@ -41,16 +41,22 @@ class TranslationViewModel @Inject constructor(
                 targetLang = it.sourceLang
 
             )
-
         }
+    }
+
+    fun selectSourceLanguage(language: LanguageCode) {
+        _uiState.update { it.copy(sourceLang = language) }
+    }
+
+    fun selectTargetLanguage(language: LanguageCode) {
+        _uiState.update { it.copy(targetLang = language) }
     }
 
     fun translateText() {
         viewModelScope.launch {
             val result = translationUseCase.translate(
-                sl =  LanguageCode.valueOf(_uiState.value.sourceLang.uppercase()),
-                dl = LanguageCode.valueOf(_uiState.value.targetLang.uppercase()),
-                //dl = LanguageCode.valueOf(code.uppercase()),
+                sl =  _uiState.value.sourceLang,
+                dl = _uiState.value.targetLang,
                 text = _uiState.value.inputText,
             )
             _uiState.update {
@@ -66,8 +72,8 @@ class TranslationViewModel @Inject constructor(
     fun insertFavorite() {
         viewModelScope.launch {
             val result = translationUseCase.translate(
-                sl =  LanguageCode.valueOf(_uiState.value.sourceLang.uppercase()),
-                dl = LanguageCode.valueOf(_uiState.value.targetLang.uppercase()),
+                sl =  LanguageCode.ENGLISH,//.valueOf(_uiState.value.sourceLang.uppercase()),
+                dl = LanguageCode.RUSSIAN,//valueOf(_uiState.value.targetLang.uppercase()),
                 //dl = LanguageCode.valueOf(code.uppercase()),
                 text = _uiState.value.inputText,
             )
@@ -85,8 +91,8 @@ class TranslationViewModel @Inject constructor(
 }
 
 data class TranslationUiState(
-    var sourceLang: String ,
-    var targetLang: String ,
-    var inputText: String ,
+    var sourceLang: LanguageCode = LanguageCode.ENGLISH,
+    var targetLang: LanguageCode = LanguageCode.RUSSIAN,
+    var inputText: String = "",
     var translateText: String? = null,
 )

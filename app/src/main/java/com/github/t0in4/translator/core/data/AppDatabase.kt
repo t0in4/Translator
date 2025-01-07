@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instanc
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.github.t0in4.translator.core.favoritedata.FavoriteDao
 import com.github.t0in4.translator.core.favoritedata.FavoriteTable
 
@@ -28,11 +30,29 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database",
-                ).fallbackToDestructiveMigration().build()
+                )//.fallbackToDestructiveMigration() // подходит для кэширования данных из интернета
+                    //.addMigrations() // лучше создать отдельный список и впоследствии дополнять миграции
+                    .addMigrations(MIGRATION_1_2) // если следующая таблица то через запятую указывать ее
+                    .build()
                 INSTANCE = instance
                 instance
             }
 
         }
+    }
+}
+
+val MIGRATION_1_2 = object: Migration(1,2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+                CREATE TABLE IF NOT EXISTS favorites (
+                    id INTEGER PIMARY KEY AUTOINCREMENT NOT NULL,
+                    sourceText TEXT NOT NULL,
+                    translatedText TEXT NOT NULL,
+                    timestamp INTEGER NOT NULL
+                )
+            """.trimIndent()
+        )
     }
 }

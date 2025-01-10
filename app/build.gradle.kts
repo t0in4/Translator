@@ -63,6 +63,13 @@ android {
 
 
 dependencies {
+    implementation(libs.google.text.recognition)
+
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+
     implementation(libs.okhttp.logging)
     implementation(libs.room.runtime)
     implementation(libs.androidx.room)
